@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>i-lab Program Fit Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f9f8f6;
+    color: #1a1a1a;
+    padding: 48px 32px;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e5e2db;
+  }
+
+  .ilab-mark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ilab-logo {
+    width: 36px;
+    height: 36px;
+    background: #A51C30;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .ilab-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1a1a1a;
+    line-height: 1.2;
+  }
+
+  .ilab-sub {
+    font-size: 12px;
+    color: #888;
+    margin-top: 1px;
+  }
+
+  .page-title {
+    text-align: right;
+  }
+
+  .page-title h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #1a1a1a;
+    line-height: 1.2;
+  }
+
+  .page-title p {
+    font-size: 12px;
+    color: #888;
+    margin-top: 3px;
+  }
+
+  .program-block {
+    margin-bottom: 36px;
+  }
+
+  .program-block:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .prog-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .prog-icon {
+    width: 38px;
+    height: 38px;
+    background: white;
+    border: 1px solid #e5e2db;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #A51C30;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .prog-meta { flex: 1; }
+
+  .prog-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .prog-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 500;
+    color: #1a1a1a;
+  }
+
+  .prog-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #EEEDFE;
+    color: #3C3489;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .prog-desc {
+    font-size: 12.5px;
+    color: #777;
+    margin-top: 3px;
+  }
+
+  .fit-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .fit-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e8e5de;
+    padding: 16px;
+  }
+
+  .fit-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0ede6;
+  }
+
+  .fit-icon-wrap {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .fit-label {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .fit-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .fit-card li {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    font-size: 12.5px;
+    color: #3a3a3a;
+    line-height: 1.5;
+  }
+
+  .li-dot {
+    flex-shrink: 0;
+    margin-top: 5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+
+  .card-fit .fit-icon-wrap { background: #EAF3DE; color: #3B6D11; }
+  .card-fit .fit-label { color: #3B6D11; }
+  .card-fit .li-dot { background: #639922; }
+
+  .card-best .fit-icon-wrap { background: #E6F1FB; color: #185FA5; }
+  .card-best .fit-label { color: #185FA5; }
+  .card-best .li-dot { background: #378ADD; }
+
+  .card-not .fit-icon-wrap { background: #FCEBEB; color: #A32D2D; }
+  .card-not .fit-label { color: #A32D2D; }
+  .card-not .li-dot { background: #E24B4A; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid #e5e2db;
+    margin: 32px 0;
+  }
+
+  .tip-bar {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #FAEEDA;
+    border-radius: 10px;
+    padding: 13px 15px;
+    margin-top: 24px;
+  }
+
+  .tip-bar .ti {
+    color: #854F0B;
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .tip-bar p {
+    font-size: 12.5px;
+    color: #633806;
+    line-height: 1.55;
+  }
+
+  .tip-bar strong {
+    font-weight: 500;
+  }
+
+  .page-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e2db;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .page-footer p {
+    font-size: 11px;
+    color: #bbb;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <div class="ilab-mark">
+      <div class="ilab-logo">i.</div>
+      <div>
+        <div class="ilab-name">Harvard Innovation Labs</div>
+        <div class="ilab-sub">Student Membership Programs</div>
+      </div>
+    </div>
+    <div class="page-title">
+      <h1>Program Fit Guide</h1>
+      <p>Who benefits most from each offering</p>
+    </div>
+  </div>
+
+  <div class="program-block">
+    <div class="prog-header">
+      <div class="prog-icon"><i class="ti ti-flask" aria-hidden="true"></i></div>
+      <div class="prog-meta">
+        <div class="prog-title-row">
+          <span class="prog-name">Customer Validation Primer</span>
+          <span class="prog-badge"><i class="ti ti-clock" aria-hidden="true"></i> 1 session</span>
+        </div>
+        <p class="prog-desc">A hands-on workshop introducing frameworks for gathering and interpreting customer feedback</p>
+      </div>
+    </div>
+
+    <div class="fit-grid">
+      <div class="fit-card card-fit">
+        <div class="fit-header">
+          <div class="fit-icon-wrap"><i class="ti ti-circle-check" aria-hidden="true"></i></div>
+          <span class="fit-label">Fit for</span>
+        </div>
+        <ul>
+          <li><span class="li-dot"></span>Anyone with an idea, concept, prototype, or message to test</li>
+          <li><span class="li-dot"></span>Founders collecting feedback that hasn't felt useful</li>
+          <li><span class="li-dot"></span>Anyone at any stage who's never structured a feedback process</li>
+        </ul>
+      </div>
+      <div class="fit-card card-best">
+        <div class="fit-header">
+          <div class="fit-icon-wrap"><i class="ti ti-star" aria-hidden="true"></i></div>
+          <span class="fit-label">Best fit for</span>
+        </div>
+        <ul>
+          <li><span class="li-dot"></span>Founders about to talk to customers for the first time</li>
+          <li><span class="li-dot"></span>Someone with confusing or contradictory feedback they can't act on</li>
+          <li><span class="li-dot"></span>Sweet spot: "I have something to test but don't know how to do it well"</li>
+        </ul>
+      </div>
+      <div class="fit-card card-not">
+        <div class="fit-header">
+          <div class="fit-icon-wrap"><i class="ti ti-circle-x" aria-hidden="true"></i></div>
+          <span class="fit-label">Not fit for</span>
+        </div>
+        <ul>
+          <li><span class="li-dot"></span>Founders already running structured discovery with a working process</li>
+          <li><span class="li-dot"></span>Someone who hasn't yet defined what they're building or for whom</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="program-block">
+    <div class="prog-header">
+      <div class="prog-icon"><i class="ti ti-rocket" aria-hidden="true"></i></div>
+      <div class="prog-meta">
+        <div class="prog-title-row">
+          <span class="prog-name">Customer Discovery Sprint</span>
+          <span class="prog-badge"><i class="ti ti-calendar" aria-hidden="true"></i> 3 weeks</span>
+        </div>
+        <p class="prog-desc">A structured sprint combining workshops, real interviews, peer reflection, and advisor feedback</p>
+      </div>
+    </div>
+
+    <div class="fit-grid">
+      <div class="fit-card card-fit">
+        <div class="fit-header">
+          <div class="fit-icon-wrap"><i class="ti ti-circle-check" aria-hidden="true"></i></div>
+          <span class="fit-label">Fit for</span>
+        </div>
+        <ul>
+          <li><span class="li-dot"></span>Early-stage founders with an idea and target customer but limited real-world testing</li>
+          <li><span class="li-dot"></span>Teams preparing for accelerators or pitch competitions</li>
+          <li><span class="li-dot"></span>Anyone who knows they should talk to customers but keeps not doing it</li>
+        </ul>
+      </div>
+      <div class="fit-card card-best">
+        <div class="fit-header">
+          <div class="fit-icon-wrap"><i class="ti ti-star" aria-hidden="true"></i></div>
+          <span class="fit-label">Best fit for</span>
+        </div>
+        <ul>
+          <li><span class="li-dot"></span>Founders who need accountability and structure to execute</li>
+          <li><span class="li-dot"></span>Can commit 5–10 interviews over two weeks and wants peer feedback on findings</li>
+          <li><span class="li-dot"></span>At problem/solution fit stage, sharpening value proposition before building</li>
+        </ul>
+      </div>
+      <div class="fit-card card-not">
+        <div class="fit-header">
+          <div class="fit-icon-wrap"><i class="ti ti-circle-x" aria-hidden="true"></i></div>
+          <span class="fit-label">Not fit for</span>
+        </div>
+        <ul>
+          <li><span class="li-dot"></span>Founders with significant discovery done who are now in build mode</li>
+          <li><span class="li-dot"></span>Anyone who can't realistically do 5+ interviews in two weeks</li>
+          <li><span class="li-dot"></span>Someone without a narrowed problem space — they'd struggle to know who to talk to</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip-bar">
+    <i class="ti ti-bulb" aria-hidden="true"></i>
+    <p><strong>Sequencing note:</strong> The Primer is essentially a prerequisite mindset for the Sprint. Someone who jumps into the Sprint without it may collect interviews but struggle to interpret them. Consider surfacing the Primer before or alongside the Sprint for anyone flagging low confidence in customer conversations.</p>
+  </div>
+
+  <div class="page-footer">
+    <p>Harvard Innovation Labs · innovationlabs.harvard.edu</p>
+    <p>Program Fit Guide · 2026</p>
+  </div>
+
+</div>
+</body>
+</html>
