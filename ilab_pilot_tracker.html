@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>i-lab Pilot Participant Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --crimson: #A51C30;
+    --ink: #1a1a1a;
+    --muted: #666;
+    --border: #ddd9d0;
+    --surface: #f9f8f5;
+    --line: #e8e4db;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px 40px 48px;
+  }
+
+  /* ── Header ── */
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--crimson);
+    margin-bottom: 24px;
+  }
+
+  .logo-row { display: flex; align-items: center; gap: 10px; }
+
+  .logo-box {
+    width: 32px; height: 32px;
+    background: var(--crimson);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .logo-text { font-size: 12px; color: var(--muted); line-height: 1.3; }
+  .logo-text strong { display: block; font-size: 13px; font-weight: 500; color: var(--ink); }
+
+  .doc-title { text-align: right; }
+  .doc-title h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .doc-title p { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* ── Section labels ── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--crimson);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .section { margin-bottom: 22px; }
+
+  /* ── Field rows ── */
+  .field-row {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .field-row.cols-2 { grid-template-columns: 1fr 1fr; }
+  .field-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .field-row.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 4px; }
+
+  .field label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .field .line {
+    border-bottom: 1px solid var(--border);
+    height: 22px;
+    width: 100%;
+  }
+
+  .field .line-tall {
+    border-bottom: 1px solid var(--border);
+    height: 36px;
+    width: 100%;
+  }
+
+  /* ── Scale rows ── */
+  .scale-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .scale-q {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    line-height: 1.4;
+  }
+
+  .scale-q span {
+    display: block;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .scale-boxes {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .scale-box {
+    width: 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-left: 1px solid var(--border);
+    padding: 6px 0;
+  }
+
+  .scale-box .num {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .scale-box .circle {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+  }
+
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 12px 0 0;
+    margin-top: -4px;
+    margin-bottom: 10px;
+  }
+
+  .scale-labels span {
+    font-size: 10px;
+    color: var(--muted);
+    padding-left: 1px;
+  }
+
+  .scale-labels span:last-child { padding-left: 0; }
+
+  /* ── Checkbox rows ── */
+  .check-grid {
+    display: grid;
+    gap: 6px 20px;
+    margin-bottom: 10px;
+  }
+
+  .check-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .check-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  .check-item .box {
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px dashed var(--line);
+    margin: 24px 0;
+  }
+
+  /* ── Outcome pill row ── */
+  .outcome-row {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .outcome-cell {
+    flex: 1;
+    padding: 10px 12px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .outcome-cell:last-child { border-right: none; }
+
+  .outcome-cell .box {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .outcome-cell .opt-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .outcome-cell .opt-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  /* ── Notes block ── */
+  .notes-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .notes-block .note-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .notes-lines { display: flex; flex-direction: column; gap: 10px; }
+
+  .notes-lines .line {
+    border-bottom: 1px solid var(--border);
+    height: 18px;
+    width: 100%;
+  }
+
+  /* ── Advisor block ── */
+  .advisor-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    padding: 14px;
+    background: #fff8f8;
+    border: 1px solid #f0d0d4;
+    border-radius: 6px;
+    margin-bottom: 10px;
+  }
+
+  .advisor-block .block-title {
+    grid-column: 1 / -1;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--crimson);
+    margin-bottom: 2px;
+  }
+
+  /* ── Footer ── */
+  .page-footer {
+    margin-top: 32px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .page-footer p { font-size: 10px; color: #bbb; }
+
+  .instructions {
+    background: #f0f7ff;
+    border: 1px solid #c8dff5;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 22px;
+    font-size: 11.5px;
+    color: #1a4a7a;
+    line-height: 1.6;
+  }
+
+  .instructions strong { font-weight: 500; }
+
+  @media print {
+    body { font-size: 12px; }
+    .page { padding: 20px 24px; }
+    .instructions { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="page-header">
+    <div class="logo-row">
+      <div class="logo-box">i.</div>
+      <div class="logo-text">
+        <strong>Harvard Innovation Labs</strong>
+        Summer 2026 Pilot Programs
+      </div>
+    </div>
+    <div class="doc-title">
+      <h1>Participant Tracking Sheet</h1>
+      <p>One per participant · Complete at intake and within 1 week of program end</p>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <strong>How to use this sheet:</strong> Fill out sections A–C at registration or check-in. Complete sections D–F within one week of the program ending — ideally after a brief debrief with the participant or based on advisor observation. The goal is to capture enough signal to understand who got the most value and why.
+  </div>
+
+  <!-- SECTION A: Participant Info -->
+  <div class="section">
+    <div class="section-label">A — Participant information</div>
+
+    <div class="field-row cols-3">
+      <div class="field"><label>First name</label><div class="line"></div></div>
+      <div class="field"><label>Last name</label><div class="line"></div></div>
+      <div class="field"><label>Harvard school / program</label><div class="line"></div></div>
+    </div>
+
+    <div class="field-row cols-4">
+      <div class="field"><label>Year (1st, 2nd, etc.)</label><div class="line"></div></div>
+      <div class="field"><label>i-lab member since</label><div class="line"></div></div>
+      <div class="field"><label>Program attended</label><div class="line"></div></div>
+      <div class="field"><label>Date</label><div class="line"></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION B: Stage & Context (Intake) -->
+  <div class="section">
+    <div class="section-label">B — Stage &amp; context <em style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:#999;">(collected at intake)</em></div>
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">How does this person describe their current stage? Check one.</p>
+    <div class="check-grid cols-2" style="margin-bottom:16px;">
+      <div class="check-item"><div class="box"></div>Exploring — curious, no defined idea yet</div>
+      <div class="check-item"><div class="box"></div>Validating — have an idea, testing if it works</div>
+      <div class="check-item"><div class="box"></div>Building — actively developing product or service</div>
+      <div class="check-item"><div class="box"></div>Scaling — have traction, working to grow</div>
+    </div>
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">What is their biggest blocker right now? Check one.</p>
+    <div class="check-grid cols-2" style="margin-bottom:16px;">
+      <div class="check-item"><div class="box"></div>Sense of direction — not sure what to work on</div>
+      <div class="check-item"><div class="box"></div>Finding collaborators — co-founders, teammates, customers</div>
+      <div class="check-item"><div class="box"></div>Skills &amp; knowledge — need to learn to move forward</div>
+      <div class="check-item"><div class="box"></div>Funding &amp; resources — need money, space, or tools</div>
+    </div>
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Domain / focus area. Check one.</p>
+    <div class="check-grid cols-4" style="margin-bottom:16px;">
+      <div class="check-item"><div class="box"></div>Technology</div>
+      <div class="check-item"><div class="box"></div>Social impact</div>
+      <div class="check-item"><div class="box"></div>Life sciences</div>
+      <div class="check-item"><div class="box"></div>Creative &amp; media</div>
+    </div>
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Weekly time commitment right now. Check one.</p>
+    <div class="check-grid cols-4" style="margin-bottom:4px;">
+      <div class="check-item"><div class="box"></div>A few hours</div>
+      <div class="check-item"><div class="box"></div>5–15 hrs/week</div>
+      <div class="check-item"><div class="box"></div>20+ hrs/week</div>
+      <div class="check-item"><div class="box"></div>Full time</div>
+    </div>
+  </div>
+
+  <!-- SECTION C: Confidence (Intake) -->
+  <div class="section">
+    <div class="section-label">C — Confidence at intake <em style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:#999;">(self-reported · 1 = not at all, 5 = very)</em></div>
+
+    <div class="scale-row">
+      <div class="scale-q">I know who my target customer is<span>Rate 1–5</span></div>
+      <div class="scale-boxes">
+        <div class="scale-box"><div class="num">1</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">2</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">3</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">4</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">5</div><div class="circle"></div></div>
+      </div>
+    </div>
+
+    <div class="scale-row">
+      <div class="scale-q">I feel confident talking to customers<span>Rate 1–5</span></div>
+      <div class="scale-boxes">
+        <div class="scale-box"><div class="num">1</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">2</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">3</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">4</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">5</div><div class="circle"></div></div>
+      </div>
+    </div>
+
+    <div class="scale-row">
+      <div class="scale-q">I know what I need to learn or validate next<span>Rate 1–5</span></div>
+      <div class="scale-boxes">
+        <div class="scale-box"><div class="num">1</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">2</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">3</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">4</div><div class="circle"></div></div>
+        <div class="scale-box"><div class="num">5</div><div class="circle"></div></div>
+      </div>
+    </div>
+
+    <div class="field-row cols-2" style="margin-top:12px;">
+      <div class="field">
+        <label>Prior customer conversations (approx. number)</label>
+        <div class="line"></div>
+      </div>
+      <div class="field">
+        <label>How did they hear about this program?</label>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION D: Outcome (Post-program) -->
+  <div class="section">
+    <div class="section-label">D — Outcome <em style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:#999;">(completed within 1 week of program end)</em></div>
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Did this program move this person forward? Choose one.</p>
+    <div class="outcome-row">
+      <div class="outcome-cell">
+        <div class="box"></div>
+        <div>
+          <div class="opt-label">Yes, clearly</div>
+          <div class="opt-sub">Visible change in thinking or action</div>
+        </div>
+      </div>
+      <div class="outcome-cell">
+        <div class="box"></div>
+        <div>
+          <div class="opt-label">Somewhat</div>
+          <div class="opt-sub">Some progress, but limited</div>
+        </div>
+      </div>
+      <div class="outcome-cell">
+        <div class="box"></div>
+        <div>
+          <div class="opt-label">Not really</div>
+          <div class="opt-sub">Little observable impact</div>
+        </div>
+      </div>
+      <div class="outcome-cell">
+        <div class="box"></div>
+        <div>
+          <div class="opt-label">Too early to tell</div>
+          <div class="opt-sub">Check back in 2–3 weeks</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Did they have a specific next action when they left? Check one.</p>
+    <div class="check-grid cols-3" style="margin-bottom:14px;">
+      <div class="check-item"><div class="box"></div>Yes — clear and concrete</div>
+      <div class="check-item"><div class="box"></div>Somewhat — vague or uncertain</div>
+      <div class="check-item"><div class="box"></div>No — left without a clear step</div>
+    </div>
+
+    <div class="field-row cols-2">
+      <div class="field">
+        <label>What was their stated next action (if any)?</label>
+        <div class="line-tall"></div>
+      </div>
+      <div class="field">
+        <label>Did they follow through? (check back 1 week later)</label>
+        <div class="line-tall"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION E: Fit Assessment -->
+  <div class="section">
+    <div class="section-label">E — Fit assessment</div>
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">In hindsight, how well was this program suited to where this person is right now?</p>
+    <div class="outcome-row" style="margin-bottom:14px;">
+      <div class="outcome-cell">
+        <div class="box"></div>
+        <div>
+          <div class="opt-label">Perfect fit</div>
+          <div class="opt-sub">Right program, right moment</div>
+        </div>
+      </div>
+      <div class="outcome-cell">
+        <div class="box"></div>
+        <div>
+          <div class="opt-label">Good fit</div>
+          <div class="opt-sub">Mostly matched their needs</div>
+        </div>
+      </div>
+      <div class="outcome-cell">
+        <div class="box"></div>
+        <div>
+          <div class="opt-label">Partial fit</div>
+          <div class="opt-sub">Some mismatch in stage or need</div>
+        </div>
+      </div>
+      <div class="outcome-cell">
+        <div class="box"></div>
+        <div>
+          <div class="opt-label">Poor fit</div>
+          <div class="opt-sub">Wrong program for this person now</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:11px;color:var(--muted);margin-bottom:10px;">If not a perfect fit — what would have served them better right now?</p>
+    <div class="check-grid cols-3" style="margin-bottom:12px;">
+      <div class="check-item"><div class="box"></div>Earlier-stage ideation support</div>
+      <div class="check-item"><div class="box"></div>A different program (note below)</div>
+      <div class="check-item"><div class="box"></div>1:1 advisor session instead</div>
+      <div class="check-item"><div class="box"></div>Community / networking event</div>
+      <div class="check-item"><div class="box"></div>Funding / resources support</div>
+      <div class="check-item"><div class="box"></div>They weren't ready yet</div>
+    </div>
+
+    <div class="field-row cols-2">
+      <div class="field">
+        <label>Better alternative (if applicable)</label>
+        <div class="line"></div>
+      </div>
+      <div class="field">
+        <label>What intake signal would have flagged this mismatch?</label>
+        <div class="line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION F: Advisor Notes -->
+  <div class="section">
+    <div class="section-label">F — Advisor / staff observation</div>
+
+    <div class="advisor-block">
+      <div class="block-title">For program leads and EIRs — qualitative notes</div>
+      <div class="field" style="grid-column:1/-1;">
+        <label>What stood out about this participant's situation or engagement?</label>
+        <div class="notes-lines">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Any pattern with other participants this cohort?</label>
+        <div class="line-tall"></div>
+      </div>
+      <div class="field">
+        <label>Recommended follow-up resource or program</label>
+        <div class="line-tall"></div>
+      </div>
+      <div class="field">
+        <label>Flag for wayfinder rubric team?</label>
+        <div style="display:flex;gap:16px;margin-top:8px;">
+          <div class="check-item"><div class="box"></div>Yes — interesting case</div>
+          <div class="check-item"><div class="box"></div>No</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row cols-3">
+      <div class="field"><label>Staff / advisor name</label><div class="line"></div></div>
+      <div class="field"><label>Role</label><div class="line"></div></div>
+      <div class="field"><label>Date completed</label><div class="line"></div></div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <p>Harvard Innovation Labs · Summer 2026 Pilot · Wayfinder Rubric Research</p>
+    <p>Confidential · Internal use only</p>
+  </div>
+
+</div>
+</body>
+</html>
